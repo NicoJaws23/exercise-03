@@ -1,0 +1,21 @@
+---
+title: "EDA-challenge"
+author: "Nico Jaworski"
+format: html
+editor: visual
+---
+
+## Exercise 03: Explore and Wrangle Data
+
+## Establishing Variable
+
+In this block of code I am creating 3 unique variables based on data in the data-wrangling csv. The variables are BSD (body size dimorphism, ratio of average male to average female body mass), sex_ratio (number of adult females to adult males), and DI (defensibility index, ratio of day range length to home range diameter
+
+```{r}
+BSD <- d$Body_mass_male_mean/d$Body_mass_female_mean
+BSD
+sex_ratio <- d$AdultFemale/d$AdultMales
+sex_ratio
+DI <- d$DayLength_km/(pi * d$HomeRange_km2)
+DI
+```
