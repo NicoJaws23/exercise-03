@@ -1,43 +1,17 @@
----
-title: "EDA-challenge"
-author: "Nico Jaworski"
-format: html
-editor: visual
----
-
-## Loading In Data
-
-Here I am loading in the data-wrangling.csv file from a URL using the library {curl}
-
-```{r}
-#| message: false
-#| warning: false
+#Load in data from Tony's URL
 library(curl)
 f <- curl("https://raw.githubusercontent.com/difiore/ada-datasets/main/data-wrangling.csv")
 d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 head(d)
-```
 
-## Establishing Variables
-
-In this block of code I am creating 3 unique variables based on data in the data-wrangling csv. The variables are BSD (body size dimorphism, ratio of average male to average female body mass), sex_ratio (number of adult females to adult males), and DI (defensibility index, ratio of day range length to home range diameter
-
-```{r}
-#| message: false
-#| warning: false
+#Set Variables
 BSD <- d$Body_mass_male_mean/d$Body_mass_female_mean
-head(BSD)
+BSD
 sex_ratio <- d$AdultFemale/d$AdultMales
-head(sex_ratio)
+sex_ratio
 DI <- d$DayLength_km/(pi * d$HomeRange_km2)
-head(DI)
-```
-## Plotting the Data
-In the following chunks of code, I am using the package {ggplot2} to create 3 different categories of plots (1) time spent moving and day range length, (2) group size and day range length, and (3) body size dimorphism and caninen size dimorphism. Each category has 2 plots, one for all the primate species in the data and one which is split by family using the facet_wrap() function.
+DI
 
-```{r}
-#| message: false
-#| warning: false
 #plot the data
 library(ggplot2)
 library(dplyr)
@@ -74,4 +48,3 @@ ggplot(data = d, mapping = aes(x = BSD, y = Canine_Dimorphism)) +
   geom_point() +
   ggtitle("Body Size and Canine Size Dimorphism by Family") +
   facet_wrap(~Family)
-```
