@@ -48,3 +48,29 @@ ggplot(data = d, mapping = aes(x = BSD, y = Canine_Dimorphism)) +
   geom_point() +
   ggtitle("Body Size and Canine Size Dimorphism by Family") +
   facet_wrap(~Family)
+
+#This code will create a new variable called diet_strategy
+#which stores the diet of each species
+#we need {tidyverse} to use the mutate function
+library(tidyverse)
+d <- d %>%
+  mutate(d, diet_strategy = ifelse(Fruit >= 50, "frugivore", ifelse(Leaves >= 50,
+  "folivore", ifelse(Fruit < 50 & Leaves < 50, "omnivore", NA))))
+
+#now we are going to use box plots to plot 
+ggplot(data = d, mapping = aes(x = diet_strategy, y = MeanGroupSize)) +
+  geom_boxplot() +
+  ggtitle("Diet Strategy and Mean Group Size")
+
+#Here I will use tools from the {dplyr} package to create new variables in the data
+#This variable will be a concatenation of the Genus and Species variable
+library(dplyr)
+d <- d %>%
+  s <- mutate(d, Binomial = paste(Genus, Species, sep = " ")) %>%
+  select(s, Binomial, Family, Brain_Size_Species_Mean, Body_mass_male_mean) %>%
+  group_by(s, Family) %>%
+  summarize(s, mean(Brain_Size_Species_Mean, na.rm = TRUE), mean(Body_mass_male_mean, na.rm = TRUE))
+
+
+
+
