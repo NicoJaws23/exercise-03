@@ -6,11 +6,11 @@ head(d)
 
 #Set Variables
 BSD <- d$Body_mass_male_mean/d$Body_mass_female_mean
-BSD
+head(BSD)
 sex_ratio <- d$AdultFemale/d$AdultMales
-sex_ratio
+head(sex_ratio)
 DI <- d$DayLength_km/(pi * d$HomeRange_km2)
-DI
+head(DI)
 
 #plot the data
 library(ggplot2)
@@ -66,11 +66,16 @@ ggplot(data = d, mapping = aes(x = diet_strategy, y = MeanGroupSize)) +
 #This variable will be a concatenation of the Genus and Species variable
 library(dplyr)
 d <- d %>%
-  s <- mutate(d, Binomial = paste(Genus, Species, sep = " ")) %>%
-  select(s, Binomial, Family, Brain_Size_Species_Mean, Body_mass_male_mean) %>%
-  group_by(s, Family) %>%
-  summarize(s, mean(Brain_Size_Species_Mean, na.rm = TRUE), mean(Body_mass_male_mean, na.rm = TRUE))
+  mutate(d, Binomial = paste(Genus, Species, sep = " ")) %>%
+  select(Binomial, Family, Brain_Size_Species_Mean, Body_mass_male_mean) %>%
+  group_by(Family) %>%
+  summarize(avgBrainSize = mean(Brain_Size_Species_Mean, na.rm = TRUE), avgBodyMassMale = mean(Body_mass_male_mean, na.rm = TRUE)) %>%
+  arrange(avgBrainSize)
+d
+#This may be the way
+#s <- select(d, Binomial, Family, Brain_Size_Species_Mean, Body_mass_male_mean)
+#by_family <- group_by(s, Family, na.rm = TRUE)
 
-
+#summarize(s, mean(Brain_Size_Species_Mean, na.rm = TRUE), mean(Body_mass_male_mean, na.rm = TRUE))
 
 

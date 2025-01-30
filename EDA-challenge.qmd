@@ -32,7 +32,9 @@ head(sex_ratio)
 DI <- d$DayLength_km/(pi * d$HomeRange_km2)
 head(DI)
 ```
+
 ## Plotting the Data
+
 In the following chunks of code, I am using the package {ggplot2} to create 3 different categories of plots (1) time spent moving and day range length, (2) group size and day range length, and (3) body size dimorphism and caninen size dimorphism. Each category has 2 plots, one for all the primate species in the data and one which is split by family using the facet_wrap() function.
 
 ```{r}
@@ -74,4 +76,39 @@ ggplot(data = d, mapping = aes(x = BSD, y = Canine_Dimorphism)) +
   geom_point() +
   ggtitle("Body Size and Canine Size Dimorphism by Family") +
   facet_wrap(~Family)
+```
+
+## Creating a New Variable
+
+Here I am creating a new variable called diet_strategy which will describe each species as a frugivore, folivore, or omnivore. I will then create a box plot showing the group size for each diet strategy.
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+d <- d %>%
+  mutate(d, diet_strategy = ifelse(Fruit >= 50, "frugivore", ifelse(Leaves >= 50,
+  "folivore", ifelse(Fruit < 50 & Leaves < 50, "omnivore", NA))))
+
+#now we are going to use box plots to plot 
+ggplot(data = d, mapping = aes(x = diet_strategy, y = MeanGroupSize)) +
+  geom_boxplot() +
+  ggtitle("Diet Strategy and Mean Group Size")
+```
+
+## Arranging Family Average Brain Size
+
+In this final chunk of code I will use the tools mutate(), select(), group_by(), summarize(), and arrange() from the package {dplyr}. This code will create a new variable called Binomial, trim the data frame down to just the variables Binomial, Family, Brain_size_species_mean, and Body_mass_male_mean. It will then group these variables by Family and determine the average value of Brain_size_species_mean and Body_mass_male_mean for each Family. These values will then be arranged in the data frame by increasing average brain size.
+
+```{r}
+#| message: false
+#| warning: false
+library(dplyr)
+d <- d %>%
+  mutate(d, Binomial = paste(Genus, Species, sep = " ")) %>%
+  select(Binomial, Family, Brain_Size_Species_Mean, Body_mass_male_mean) %>%
+  group_by(Family) %>%
+  summarize(avgBrainSize = mean(Brain_Size_Species_Mean, na.rm = TRUE), avgBodyMassMale = mean(Body_mass_male_mean, na.rm = TRUE)) %>%
+  arrange(avgBrainSize)
+d
 ```
