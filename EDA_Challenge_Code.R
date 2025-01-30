@@ -72,10 +72,3 @@ d <- d %>%
   summarize(avgBrainSize = mean(Brain_Size_Species_Mean, na.rm = TRUE), avgBodyMassMale = mean(Body_mass_male_mean, na.rm = TRUE)) %>%
   arrange(avgBrainSize)
 d
-#This may be the way
-#s <- select(d, Binomial, Family, Brain_Size_Species_Mean, Body_mass_male_mean)
-#by_family <- group_by(s, Family, na.rm = TRUE)
-
-#summarize(s, mean(Brain_Size_Species_Mean, na.rm = TRUE), mean(Body_mass_male_mean, na.rm = TRUE))
-
-
