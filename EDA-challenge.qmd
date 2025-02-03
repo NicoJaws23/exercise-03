@@ -20,22 +20,23 @@ head(d)
 
 ## Establishing Variables
 
-In this block of code I am creating 3 unique variables based on data in the data-wrangling csv. The variables are BSD (body size dimorphism, ratio of average male to average female body mass), sex_ratio (number of adult females to adult males), and DI (defensibility index, ratio of day range length to home range diameter
+In this block of code I am creating 3 unique variables based on data in the data-wrangling csv. I am using the %\>% operator and the mutate function so that these variables are added to the dataset in R. The variables are BSD (body size dimorphism, ratio of average male to average female body mass), sex_ratio (number of adult females to adult males), and DI (defensibility index, ratio of day range length to home range diameter). I will then use names(d) to show that the variables have been added to the dataset
 
 ```{r}
 #| message: false
 #| warning: false
-BSD <- d$Body_mass_male_mean/d$Body_mass_female_mean
-head(BSD)
-sex_ratio <- d$AdultFemale/d$AdultMales
-head(sex_ratio)
-DI <- d$DayLength_km/(pi * d$HomeRange_km2)
-head(DI)
+library(dplyr)
+library(tidyverse)
+d <- d %>%
+  mutate(d, BSD = Body_mass_male_mean/Body_mass_female_mean) %>%
+  mutate(d, sex_ratio = AdultFemale/AdultMales) %>%
+  mutate(d, DI = DayLength_km/(2 * sqrt(HomeRange_km2/pi)))
+names(d)
 ```
 
 ## Plotting the Data
 
-In the following chunks of code, I am using the package {ggplot2} to create 3 different categories of plots (1) time spent moving and day range length, (2) group size and day range length, and (3) body size dimorphism and caninen size dimorphism. Each category has 2 plots, one for all the primate species in the data and one which is split by family using the facet_wrap() function.
+In the following chunks of code, I am using the package {ggplot2} to create 3 different categories of plots (1) time spent moving and day range length, (2) group size and day range length, and (3) body size dimorphism and canine size dimorphism. Each category has 2 plots, one for all the primate species in the data and one which is split by family using the facet_wrap() function.
 
 ```{r}
 #| message: false
@@ -45,35 +46,35 @@ library(ggplot2)
 library(dplyr)
 #Movement and day length overall
 ggplot(data = d, mapping = aes(x = Move, y = DayLength_km)) +
-  geom_point() +
+  geom_point(na.rm = TRUE) +
   ggtitle("Movement and Day Range Length Overall")
 
 #Movement and day length by family
 ggplot(data = d, mapping = aes(x = Move, y = DayLength_km)) +
-  geom_point() +
+  geom_point(na.rm = TRUE) +
   ggtitle("Movement and Day Range Length by Family") +
   facet_wrap(~Family)
 
 #Group size and day range length overall
 ggplot(data = d, mapping = aes(x = MeanGroupSize, y = DayLength_km)) +
-  geom_point() +
+  geom_point(na.rm = TRUE) +
   ggtitle("Group Size and Day Range Length Overall")
 
 #Group size and day range by family
 ggplot(data = d, mapping = aes(x = MeanGroupSize, y = DayLength_km)) +
-  geom_point() +
+  geom_point(na.rm = TRUE) +
   ggtitle("Group Size and Day Range Length by Family") +
   facet_wrap(~Family)
 
 
 #Canine Dimorphism and Body Dimorphism Overall
 ggplot(data = d, mapping = aes(x = BSD, y = Canine_Dimorphism)) +
-  geom_point() +
+  geom_point(na.rm = TRUE) +
   ggtitle("Body Size and Canine Size Dimorphism Overall")
 
 #Canine Dimorphism and Body Dimorphism by Familt
 ggplot(data = d, mapping = aes(x = BSD, y = Canine_Dimorphism)) +
-  geom_point() +
+  geom_point(na.rm = TRUE) +
   ggtitle("Body Size and Canine Size Dimorphism by Family") +
   facet_wrap(~Family)
 ```
@@ -92,7 +93,7 @@ d <- d %>%
 
 #now we are going to use box plots to plot 
 ggplot(data = d, mapping = aes(x = diet_strategy, y = MeanGroupSize)) +
-  geom_boxplot() +
+  geom_boxplot(na.rm = TRUE) +
   ggtitle("Diet Strategy and Mean Group Size")
 ```
 
@@ -110,5 +111,5 @@ d <- d %>%
   group_by(Family) %>%
   summarize(avgBrainSize = mean(Brain_Size_Species_Mean, na.rm = TRUE), avgBodyMassMale = mean(Body_mass_male_mean, na.rm = TRUE)) %>%
   arrange(avgBrainSize)
-d
+print(d)
 ```
